@@ -21,40 +21,50 @@ public class OnlineLibrarySystem {
     // Pre-condition: Book must exist and be available
     // Post-condition: Book is marked as borrowed and user is recorded
     public void borrowBook(String bookId, User user) {
+        //Precondition
         assert bookIdExists(bookId) : "Error: Book '" + bookId + "' does not exist in the system.";
         assert isAvailable(bookId) : "Error: Book '" + bookId + "' is already borrowed.";
 
+        //Process
         System.out.println("User " + user.getUserId() + " is borrowing book: " + bookId);
         books.put(bookId, 2); // Mark as borrowed
         borrowedBy.put(bookId, user.getUserId());
 
+        //Postcondition
         assert isBorrowed(bookId) : "Error: Failed to borrow the book.";
     }
 
     // Pre-condition: Book must be borrowed by this user
     // Post-condition: Book is marked as available
     public void returnBook(String bookId, User user) {
+        //Precondition
         assert bookIdExists(bookId) : "Error: Book '" + bookId + "' does not exist in the system.";
         assert isBorrowed(bookId) : "Error: Book '" + bookId + "' wasn't borrowed.";
         assert borrowedBy.get(bookId).equals(user.getUserId()) : "Error: User '" + user.getUserId() + "' didn't borrow book '" + bookId + "'.";
 
+        //Process
         System.out.println("User " + user.getUserId() + " is returning book: " + bookId);
         books.put(bookId, 1); // Mark as available
         borrowedBy.remove(bookId);
 
+        //Postcondition
         assert isAvailable(bookId) : "Error: Failed to return the book.";
     }
 
     // Pre-condition: Book must exist
     // Post-condition: Print availability info
     public void checkAvailability(String bookId) {
+        //Precondition
         assert bookIdExists(bookId) : "Error: Book '" + bookId + "' does not exist in the system.";
 
+        //Process
         int status = books.get(bookId);
         if (status == 1) {
+            //Postcondition
             System.out.println("Book " + bookId + " is available.");
         } else {
             String userId = borrowedBy.get(bookId);
+            //Postcondition
             System.out.println("Book " + bookId + " is currently borrowed by user " + userId + ".");
         }
     }
@@ -99,7 +109,7 @@ public class OnlineLibrarySystem {
         library.returnBook("book1", user1);
         library.checkAvailability("book1");
         System.err.println();
-        
+
         System.err.println(".................................");
         System.err.println("\nINVARIANT \n");
         library.invariant();
